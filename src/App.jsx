@@ -5,7 +5,7 @@ import CommunitySelector from "./components/CommunitySelector";
 import TableView from "./components/TableView";
 import { init, useLazyQueryWithPagination } from "@airstack/airstack-react";
 
-init("29e4514124794cfba1002e869484a59e");
+init("YOUR API KEY HERE");
 
 
 function App() {
