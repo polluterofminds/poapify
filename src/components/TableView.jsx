@@ -5,38 +5,27 @@ const TableView = (props) => {
   const renderPopulated = () => {
     return (
       <div>
-        <button  style={{marginBottom: 12, marginLeft: 10}} onClick={props.buildGraph} className="btn">Reload table</button>
+        <button  style={{marginBottom: 12, marginLeft: 10}} onClick={props.searchAttendees} className="btn">Reload table</button>
         <table>          
           <thead>
             <tr>
-              <th scope="col">User address(es)</th>
-              <th scope="col">Social App</th>
+              <th scope="col">User address</th>
               <th scope="col" rowspan="2">
-                Social Username
-              </th>
-              <th scope="col" rowspan="2">
-                Social UserID
-              </th>
-              <th scope="col" rowspan="2">
-                Linked Address
+                Social Usernames
               </th>
             </tr>
           </thead>
           <tbody>
-            {props.graphResults.map((r) => {
+            {props.results.map((r) => {
               return (
-                <tr key={r.userAddress || r.addresses[0]}>
+                <tr key={r.owner.indentity}>
                   <td>
-                    {r.userAddress
-                      ? r.userAddress
-                      : r.addresses.length > 0
-                      ? r.addresses.join(", ")
-                      : r.addresses[0]}
+                    {r.owner.identity}
                   </td>
-                  <td>{r.dappName}</td>
-                  <td>{r.profileName}</td>
-                  <td>{r.userId}</td>
-                  <td>{r.userAddress}</td>
+                  <td>{r.owner.socials && r.owner.socials.map(s => {
+                    return (
+                      <><span title={s.profileName}>{s.profileName.split(0, 20)}</span><br/></>)
+                  })}</td>                  
                 </tr>
               );
             })}
@@ -50,9 +39,9 @@ const TableView = (props) => {
     return (
       <div className="empty-state">
         <img src={graph} alt="Graph of knowledge" />
-        <h1>Make your selections to build your graph</h1>
-        <button disabled={!props.selectionsMade} onClick={props.buildGraph}>
-          Build now
+        <h1>Enter an Event ID and see attendees now</h1>
+        <button disabled={!props.eventId} onClick={props.searchAttendees}>
+          View now
         </button>
       </div>
     );
@@ -60,7 +49,7 @@ const TableView = (props) => {
 
   return (
     <div className="table">
-      {props.graphResults ? <>{renderPopulated()}</> : <>{renderEmpty()}</>}
+      {props.results.length ? <>{renderPopulated()}</> : <>{renderEmpty()}</>}
     </div>
   );
 };

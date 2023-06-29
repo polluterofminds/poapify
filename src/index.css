@@ -51,14 +51,14 @@ body {
   margin: auto;
 }
 
-.selectors {
+.event-input {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin: auto;
 }
 
-.social h3, .communities h3 {
+.social h3, .event-search h3 {
   text-decoration: underline;
   margin-bottom: 15px;
 }
