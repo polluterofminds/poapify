@@ -8,7 +8,7 @@ const EventSelector = (props) => {
       <input
         type="text"
         value={props.eventId}
-        onChange={(e) => props.setEventId(e.target.value)}
+        onChange={(e) => props.setEventId({eventId: e.target.value})}
         placeholder="Enter event ID to search"
       />
     </div>

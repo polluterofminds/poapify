@@ -4,46 +4,45 @@ import EventSelector from "./components/EventSelector";
 import TableView from "./components/TableView";
 import { init, useLazyQueryWithPagination } from "@airstack/airstack-react";
 
-init("YOUR API KEY HERE");
+const KEY = import.meta.env.VITE_AIRSTACK_KEY
+
+init(KEY);
 
 
 function App() {  
-  const [eventId, setEventId] = useState("");
-  const [query, setQuery] = useState(``);
-  const [filteredData, setFilteredData] = useState([]);
+  const [variables, setVariables] = useState({
+    eventId: ""
+  })
 
-  const [fetch, { data, loading, pagination, error }] = useLazyQueryWithPagination(query, {});
-  const { hasNextPage, hasPrevPage, getNextPage, getPrevPage } = pagination;
-
-  useEffect(() => {
-    const newQuery = `
-    query POAPEventAttendeesAndSocialProfiles {
-      Poaps(input: {filter: {eventId: {_eq: "${eventId}"}}, blockchain: ALL, limit: 200}) {
-        Poap {
-          owner {
-            identity
-            socials {
-              profileName
-              userHomeURL
-              profileTokenUri
-            }
+  const query = `
+  query POAPEventAttendeesAndSocialProfiles($eventId: String!) {
+    Poaps(input: {filter: {eventId: {_eq: $eventId}}, blockchain: ALL, limit: 200}) {
+      Poap {
+        owner {
+          identity
+          socials {
+            profileName
+            userHomeURL
+            profileTokenUri
           }
         }
       }
     }
-    `
-    setQuery(newQuery);
-  }, [eventId])
+  }
+  `
+
+  const [fetch, { data, loading, pagination, error }] = useLazyQueryWithPagination(query, variables, {});
+  const { hasNextPage, hasPrevPage, getNextPage, getPrevPage } = pagination;
 
   return (
     <>
      <NavBar />
      <div className="main-view">
         <div className="event-input">         
-          <EventSelector eventId={eventId} setEventId={setEventId} />
+          <EventSelector eventId={variables.eventId} setEventId={setVariables} />
         </div>
         <div>
-          <TableView eventId={eventId} results={data?.Poaps?.Poap || []} searchAttendees={() => fetch()} />
+          <TableView eventId={variables.eventId} results={data?.Poaps?.Poap || []} searchAttendees={() => fetch()} />
         </div>
       </div>
     </>
